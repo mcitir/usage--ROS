@@ -76,7 +76,7 @@ if __name__ == "__main__":
   * `chmod +x my_first_node.py`
   * `./my_first_node.py`
     
-### How to install the node with Python
+#### How to install the node with Python
 * `setup.cfg` file tells where you will install the file.
 * update `setup.py` file `console_scripts`
 
@@ -97,4 +97,92 @@ if __name__ == "__main__":
 ```
 * call `colcon build  --packages-select my_py_package` in `~/ros2_ws` to build again
 * executable `py_node` will be created in the folder `~/ros2_ws/install/my_py_package/lib/my_py_package`
-* before running `./py_node`, call `source ~/.bashrc`, otherwise there will be an error
+##### Two ways to execute the node
+call `source ~/.bashrc`, otherwise there will be an error:
+Executing by
+1) calling the python file directly `./my_first_node.py` in the folder `cd ~/ros2_ws/src/my_py_package/my_py_package`
+
+   Note: Make first python executable `chmod +x my_first_node.py`
+   
+2) calling `./py_node` in the folder `~/ros2_ws/install/my_py_package/lib/my_py_package`
+3) calling ros2 run command as `ros2 run my_py_package py_node`
+
+#### Improving The Node codes as OOP
+The node file can be written by Object Oriented Program (OOP) approach as below. The function of the node is completely same, but in this version. The `node` object generated from a class named `MyNode` instead of generating from directly imported `Node` from rclpy.node
+
+```python
+#!/usr/bin/env python3
+import rclpy
+from rclpy.node import Node #import Node class() from rclpy library
+
+class MyNode(Node):
+
+    def __init__(self):
+        super().__init__("py_test") # call __init__ function from supervisor Node class()
+        self.get_logger().info("Hello ROS2")
+
+def main(args=None):
+    #start communication with ROS2
+    rclpy.init(args=args) #call __main__  args
+
+    node = MyNode() #generate node object from the class of MyNode()
+    
+    rclpy.spin(node) #keeps the program running until exit
+
+    #shutdown communication with ROS   
+    rclpy.shutdown()
+    
+    #After shutdown, node will be destroyed, because the node will be out of scope
+
+if __name__ == "__main__":
+    main()
+```
+* compile again with `colcon build ..` as above
+* then, run `ros2 run my_py_package py_node`
+
+We can extend code by adding a timer and counter as below
+
+```python
+#!/usr/bin/env python3
+import rclpy
+from rclpy.node import Node #import Node class() from rclpy library
+
+class MyNode(Node):
+
+    def __init__(self):
+        super().__init__("py_test") # call __init__ function from supervisor Node class()
+        self.counter_ = 0
+        self.get_logger().info("Hello ROS2")
+        self.create_timer(0.5, self.timer_callback)
+
+    def timer_callback(self):
+        self.counter_ += 1
+        self.get_logger().info("Hello " + str(self.counter_))
+
+
+def main(args=None):
+    #Initilize ROS2 communication
+    rclpy.init(args=args) #call __main__  args
+    #Create Node
+    node = MyNode()
+    #Make the node spinning until press Ctrl + C
+    rclpy.spin(node)
+    #shutdown communication with ROS   
+    rclpy.shutdown()
+    
+
+if __name__ == "__main__":
+    main()
+```
+### Writing ROS Nodes in CPP
+
+
+
+#### How to install the node with CMake
+
+
+##### Two ways to execute the node
+
+
+
+#### Improving The Node codes as OOP
