@@ -13,8 +13,18 @@ workspace:~/catkin_ws$ catkin_make //to build the catkin packages
 ```
 
 ## Creating Package (Pkg)
+## How to Create Python Package
 * First, go into ros workspace source directory. For exapmle: `cd ~/ros2_ws/src`
-* To create a new package: `ros2 pkg create package_name --build-type amend_py --dependencies rclpy`
-  * `amend_py` says in which language will be coding
-  * `rclpy` says ros depeendency will be used in python
-* 
+* To create a new package: `ros2 pkg create my_py_package --build-type ament_python --dependencies rclpy`
+  * `ament_python` says in which language will be coding
+  * `rclpy` says ros dependency will be used in python
+* To compile this specific package, return the folder back `~/ros2_ws/`
+  * type command `colcon build --packages-select my_py_package` 
+
+## How to Create Python Package
+* First, go into ros workspace source directory. For exapmle: `cd ~/ros2_ws/src`
+* To create a new package: `ros2 pkg create my_cpp_package --build-type ament_cmake --dependencies rclcpp`
+  * `ament_cpp` says in which language will be coding
+  * `rclcpp` says ros dependency will be used in cpp
+* To compile this specific package, return the folder back `~/ros2_ws/`
+  * type command `colcon build --packages-select my_cpp_package`
