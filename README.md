@@ -28,3 +28,13 @@ workspace:~/catkin_ws$ catkin_make //to build the catkin packages
   * `rclcpp` says ros dependency will be used in cpp
 * To compile this specific package, return the folder back `~/ros2_ws/`
   * type command `colcon build --packages-select my_cpp_package`
+
+## ROS Nodes
+A package is an independent unit inside of an application. We will create nodes inside a package. Each node can be launced seperately.
+
+![image](https://user-images.githubusercontent.com/35730346/131210576-77c0da8f-f45d-40f3-ac96-738e15776b79.png)
+
+Nodes communicates with each other through topics, services, and parameters.
+
+
+
