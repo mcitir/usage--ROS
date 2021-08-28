@@ -11,3 +11,10 @@ workspace:~/catkin_ws/src$ catkin_create_pkg give_a_package_name roscpp std_msgs
 workspace:~/catkin_ws/src$ cd ..
 workspace:~/catkin_ws$ catkin_make //to build the catkin packages
 ```
+
+## Creating Package (Pkg)
+* First, go into ros workspace source directory. For exapmle: `cd ~/ros2_ws/src`
+* To create a new package: `ros2 pkg create package_name --build-type amend_py --dependencies rclpy`
+  * `amend_py` says in which language will be coding
+  * `rclpy` says ros depeendency will be used in python
+* 
