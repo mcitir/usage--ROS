@@ -97,7 +97,7 @@ if __name__ == "__main__":
 ```
 * call `colcon build  --packages-select my_py_package` in `~/ros2_ws` to build again
 * executable `py_node` will be created in the folder `~/ros2_ws/install/my_py_package/lib/my_py_package`
-##### Two ways to execute the node
+##### - Two ways to execute the node
 call `source ~/.bashrc`, otherwise there will be an error:
 Executing by
 1) calling the python file directly `./my_first_node.py` in the folder `cd ~/ros2_ws/src/my_py_package/my_py_package`
@@ -175,14 +175,81 @@ if __name__ == "__main__":
     main()
 ```
 ### Writing ROS Nodes in CPP
+* Go to the folder: `cd ~/ros2_ws/src/my_cpp_package/src`
+* Generate the first node: `touch my_first_node.cpp` 
+* Edit the file in VS Code:
+  * A initial scheme for writing a node as below:
+* But, firstly, we need to link `*.hpp` files location, to do that:
+  * Press Ctrl + Shift + P on VS Code, this active search bar. Then, write `C/C++: Edit Configurations (JSON)`
+  * This generates a json file under the folder `.vscode`\
+  * Add additional line `"/opt/ros/foxy/include"` for include list as below:
+```json
+  "includePath": [
+                "${workspaceFolder}/**",
+                "/opt/ros/foxy/include"
+            ],
+```
+
+* After link the source of header files, update source codes of the node as below. This is a simple template for node generation: 
+
+```cpp
+#include "rclcpp/rclcpp.hpp"
 
 
+int main(int argc, char **argv)
+{
+    // initilize communication with ROS2
+    rclcpp::init(argc, argv); 
+    // create a node by using shared pointer, no need to organize old/new pointers
+    auto node = std::make_shared<rclcpp::Node>("cpp_test"); 
+    // call a test function to print Hello on screen
+    RCLCPP_INFO(node->get_logger(), "Hello Cpp Node");
+    // Keeps the node is spinning
+    rclcpp::spin(node);
+    // Shutdown the communication with ROS2, when Ctrl + C pressed
+    rclcpp::shutdown();
+    return 0;
+}
+```
 
-#### How to install the node with CMake
+#### How to install the node after building
+First, we need to change `CMakeLists.txt` file to build an executable file during `colcon build`
+* `add_executable()` - generates executable file (first argument: node name, second argument: address of .cpp file)
+* `ament_target_dependencies()` - links dependencies
+* `install()` - installs executable which is generated above line. If not called, executable file will not be called without installation
 
+```cpp
+cmake_minimum_required(VERSION 3.5)
+project(my_cpp_package)
 
-##### Two ways to execute the node
+# Default to C++14
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
 
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
 
+# find dependencies
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+
+add_executable(cpp_node src/my_first_node.cpp)
+ament_target_dependencies(cpp_node rclcpp)
+
+install(TARGETS
+  cpp_node
+  DESTINATION lib/${PROJECT_NAME}
+
+)
+
+ament_package()
+
+```
+
+##### - Two ways to execute the node
+1) Go to the folder for executable `cd ~/ros2_ws/install/my_cpp_package/lib/my_cpp_package` and run `./cpp_node`
+2) or first `source ~/.bashrc`, then run `ros2 run my_cpp_package cpp_node`
 
 #### Improving The Node codes as OOP
