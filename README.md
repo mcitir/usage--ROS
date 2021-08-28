@@ -13,7 +13,7 @@ workspace:~/catkin_ws$ catkin_make //to build the catkin packages
 ```
 
 ## Creating Package (Pkg)
-## How to Create Python Package
+### How to Create Python Package
 * First, go into ros workspace source directory. For exapmle: `cd ~/ros2_ws/src`
 * To create a new package: `ros2 pkg create my_py_package --build-type ament_python --dependencies rclpy`
   * `ament_python` says in which language will be coding
@@ -21,7 +21,7 @@ workspace:~/catkin_ws$ catkin_make //to build the catkin packages
 * To compile this specific package, return the folder back `~/ros2_ws/`
   * type command `colcon build --packages-select my_py_package` 
 
-## How to Create Python Package
+### How to Create Python Package
 * First, go into ros workspace source directory. For exapmle: `cd ~/ros2_ws/src`
 * To create a new package: `ros2 pkg create my_cpp_package --build-type ament_cmake --dependencies rclcpp`
   * `ament_cpp` says in which language will be coding
@@ -36,5 +36,65 @@ A package is an independent unit inside of an application. We will create nodes 
 
 Nodes communicates with each other through topics, services, and parameters.
 
+### Writing ROS Nodes in Python
+* Go to the folder: `cd ~/ros2_ws/src/my_py_package/my_py_package`
+* Generate the first node: `touch my_first_node.py` 
+* Edit the file in VS Code:
+  * A initial scheme for writing a node as below:
+```python
+#!/usr/bin/env python3
+import rclpy
+from rclpy.node import Node #import Node class() from rclpy library
 
+def main(args=None):
+    #start communication with ROS2
+    rclpy.init(args=args) #call __main__  args
+    """
+    .
+    .
 
+    write node codes between rclpy.init() and rclpy.shutdown()
+    
+    .
+    .
+    """
+    node = Node("py_test") #The name of the node is not name of the file of node
+    node.get_logger().info("Hello ROS2")
+    
+    rclpy.spin(node) #keeps the program running until exit
+
+    #shutdown communication with ROS   
+    rclpy.shutdown()
+    
+    #After shutdown, node will be destroyed, because the node will be out of scope
+
+if __name__ == "__main__":
+    main()
+```
+
+* Easy way to execute the node to test, executing python file directly. 
+  * `chmod +x my_first_node.py`
+  * `./my_first_node.py`
+    
+### How to install the node with Python
+* `setup.cfg` file tells where you will install the file.
+* update `setup.py` file `console_scripts`
+
+```python
+ .
+ .
+ description='TODO: Package description',
+    license='TODO: License declaration',
+    tests_require=['pytest'],
+    entry_points={
+        'console_scripts': [
+            #give a name(py_node) for executable, this will be in /install folder
+            #use package name and node name, and call main function after semicolon(:)
+            "py_node = my_py_package.my_first_node:main" 
+        ],
+ .
+ .
+```
+* call `colcon build  --packages-select my_py_package` in `~/ros2_ws` to build again
+* executable `py_node` will be created in the folder `~/ros2_ws/install/my_py_package/lib/my_py_package`
+* before running `./py_node`, call `source ~/.bashrc`, otherwise there will be an error
