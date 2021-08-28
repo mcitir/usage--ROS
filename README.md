@@ -253,3 +253,45 @@ ament_package()
 2) or first `source ~/.bashrc`, then run `ros2 run my_cpp_package cpp_node`
 
 #### Improving The Node codes as OOP
+
+```cpp
+#include "rclcpp/rclcpp.hpp"
+
+class MyNode: public rclcpp::Node
+{
+public:
+    MyNode()
+        : Node("cpp_test"), counter_(0)
+    {
+        RCLCPP_INFO(this->get_logger(), "Hello Cpp Node");
+
+        timer_ = this->create_wall_timer(std::chrono::seconds(1), 
+                                         std::bind(&MyNode::timerCallback, this));
+    }
+private:
+    void timerCallback()
+    {
+        counter_ ++;
+        RCLCPP_INFO(this->get_logger(), "Hello %d", counter_);
+    }
+
+    rclcpp::TimerBase::SharedPtr timer_;
+    int counter_;
+};
+
+int main(int argc, char **argv)
+{
+    rclcpp::init(argc, argv); 
+    auto node = std::make_shared<MyNode>(); 
+    rclcpp::spin(node);
+    rclcpp::shutdown();
+    return 0;
+}
+```
+
+Please review the code above:
+1) A class `MyNode()` has been added. This class has
+ * a private `void` method named as `timerCallback()` triggers get_logger() function.
+  * And 2 parameters which are only initilized, `timer_` and `counter_`
+ * a public constructor with same name of class `MyNode`, and colon (:) initilizer to initilize `Node("cpp_test")` and also `counter_(0)`
+2) In main method, an object named `node` has been instantiated from the class `MyNode()`  
