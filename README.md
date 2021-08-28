@@ -291,7 +291,6 @@ int main(int argc, char **argv)
 
 Please review the code above:
 1) A class `MyNode()` has been added. This class has
-   * a private `void` method named as `timerCallback()` triggers get_logger() function.
-     * And 2 parameters which are only initilized, `timer_` and `counter_`
+   * a private `void` method named as `timerCallback()` triggers get_logger() function and 2 parameters which are only initilized, `timer_` and `counter_`
    * a public constructor with same name of class `MyNode`, and colon (:) initilizer to initilize `Node("cpp_test")` and also `counter_(0)`
 2) In main method, an object named `node` has been instantiated from the class `MyNode()`  
