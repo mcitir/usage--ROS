@@ -294,3 +294,25 @@ Please review the code above:
    * a private `void` method named as `timerCallback()` triggers get_logger() function and 2 parameters which are only initilized, `timer_` and `counter_`
    * a public constructor with same name of class `MyNode`, and colon (:) initilizer to initilize `Node("cpp_test")` and also `counter_(0)`
 2) In main method, an object named `node` has been instantiated from the class `MyNode()`  
+
+## ROS Client Library (RCL), Language Libraries
+The RCL is lowest library and it is bridged to DDS (Data Distribution Service) on the middleware.
+
+* Check `source ~/.bashrc`
+* Tab twice to see ros2 command after writing `ros2`
+* After running a node for example `ros2 run my_py_package`, then you can check node by listing via `ros2 node list` or you can see info about a node via `ros2 node info /node_name`
+* `ros2 run package_name executable_name` - to run a package in specific node
+* If we want to start same node twice for different sensor for example, in that time, there will be problem. In ROS2, it is possible to start same node for different task in multiple times, we can remap node name via `ros2 run my_py_package py_node --ros-args --remap __node:=abc`. So, node name will be changed as `abs`. To check, you can test via `ros2 node list`
+
+## RQT/ RQT Graph
+RQT is a debug tool which is a GUI tool.
+
+## ROS Topics
+A topic ...
+* is a bus which nodes exchange messages.
+* is Unidirectional data stream (publisher/subscriber)
+* has a message type
+* can be written in Python, C++, or ... directly inside ROS nodes
+
+* Publisher/Subscriber are anonymous
+* A node can have many publisher/subscribers for many different topics
